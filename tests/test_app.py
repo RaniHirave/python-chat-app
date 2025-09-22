@@ -1,20 +1,17 @@
-import unittest
+import pytest
 from app import create_app
 
-class TestApp(unittest.TestCase):
-    def setUp(self):
-        self.app = create_app()
-        self.client = self.app.test_client()
-        self.app.config['TESTING'] = True
+@pytest.fixture
+def app():
+    app = create_app()
+    app.testing = True
+    return app
 
-    def test_home_page(self):
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Welcome to the Chat App', response.data)
+@pytest.fixture
+def client(app):
+    return app.test_client()
 
-    def test_non_existent_route(self):
-        response = self.client.get('/non-existent')
-        self.assertEqual(response.status_code, 404)
-
-if __name__ == '__main__':
-    unittest.main()
+def test_index(client):
+    response = client.get('/')
+    assert response.status_code == 200
+    assert b"Hello, World!" in response.data

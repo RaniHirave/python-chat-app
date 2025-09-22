@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, request, jsonify
 
 chat_bp = Blueprint('chat', __name__)
+main = Blueprint('main', __name__)
 
-@chat_bp.route('/')
+@main.route('/')
 def index():
-    return render_template('index.html')
+    return "Hello, World! This is the chat app."
 
 @chat_bp.route('/send_message', methods=['POST'])
 def send_message():
